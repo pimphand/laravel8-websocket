@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\HelloEvent;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +15,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+header('Access-Control-Allow-Origin:  http://localhost:4200');
+header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Authorization, Origin');
+header('Access-Control-Allow-Methods:  POST, PUT');
 Route::get('/', function () {
     return view('welcome');
 });
 
 
 Route::get('/sender', function () {
-    broadcast(new HelloEvent(date('Y-m-d H:i:s') . " Selamat Datang"));
+    $count = User::count();
+
+    // dd($count);
+    $data = User::create([
+        'name' => 'John Doe-' . rand(1, 100),
+        'email' => rand(1, 100) . 'sda2' . rand(1, 100) . '@gmail.com',
+        'password' => 'sda',
+    ]);
+    broadcast(new HelloEvent($data));
 });
 
 
